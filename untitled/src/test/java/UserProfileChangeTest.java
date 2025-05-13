@@ -1,3 +1,4 @@
+import api.DataGenerator;
 import api.Specifications;
 import api.UserApi;
 import api.UserData;
@@ -14,7 +15,7 @@ public class UserProfileChangeTest extends BaseForTests {
     @Before
     public void setUp() {
         super.setUp();
-        user = new UserData("luffy@gear5.com", "GomuGomuNo", "Luffy");
+        user = DataGenerator.generateUser();
         registerUser(user);
     }
 

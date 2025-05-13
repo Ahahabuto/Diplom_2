@@ -1,6 +1,6 @@
+import api.DataGenerator;
 import api.OrderApi;
 import api.Specifications;
-import api.UserData;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ public class UserOrderTest extends BaseForTests{
     public void setUp() {
         super.setUp();
 
-        user = new UserData("luffy@gear5.com", "GomuGomuNo", "Luffy");
+        user = DataGenerator.generateUser();
         registerUser(user);
         getIngredients();
 

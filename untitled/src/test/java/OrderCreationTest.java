@@ -1,6 +1,6 @@
+import api.DataGenerator;
 import api.OrderApi;
 import api.Specifications;
-import api.UserData;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,13 +14,13 @@ public class OrderCreationTest extends BaseForTests{
     public void setUp() {
         super.setUp();
 
-        user = new UserData("kingofthe@pirates.com", "GomuGomuNo", "Nika");
+        user = DataGenerator.generateUser();
         registerUser(user);
         getIngredients();
     }
 
     @Test
-    public void createOrderWithAuthAndValidIngredients() {
+    public void createOrderWithAuthAndValidIngredientsTest() {
         Specifications.installSpecification(Specifications.requestSpec(), Specifications.responseSpec200Ok());
 
         OrderApi.createOrder(accessToken, validIngredients)
@@ -32,7 +32,7 @@ public class OrderCreationTest extends BaseForTests{
     }
 
     @Test
-    public void createOrderWithoutAuthWithValidIngredients() {
+    public void createOrderWithoutAuthWithValidIngredientsTest() {
         Specifications.installSpecification(Specifications.requestSpec(), Specifications.responseSpec200Ok());
 
         OrderApi.createOrder(null, validIngredients)
@@ -44,7 +44,7 @@ public class OrderCreationTest extends BaseForTests{
     }
 
     @Test
-    public void createOrderWithAuthWithoutIngredients() {
+    public void createOrderWithAuthWithoutIngredientsTest() {
         Specifications.installSpecification(Specifications.requestSpec(), Specifications.responseSpec400BadReq());
 
         OrderApi.createOrder(accessToken, List.of())
@@ -55,7 +55,7 @@ public class OrderCreationTest extends BaseForTests{
     }
 
     @Test
-    public void createOrderWithoutAuthAndIngredients() {
+    public void createOrderWithoutAuthAndIngredientsTest() {
         Specifications.installSpecification(Specifications.requestSpec(), Specifications.responseSpec400BadReq());
 
         OrderApi.createOrder(null, List.of())
@@ -66,7 +66,7 @@ public class OrderCreationTest extends BaseForTests{
     }
 
     @Test
-    public void createOrderWithInvalidIngredientsHash() {
+    public void createOrderWithInvalidIngredientsHashTest() {
         Specifications.installSpecification(Specifications.requestSpec(), Specifications.responseSpec500InternalServerError());
 
         OrderApi.createOrder(accessToken, invalidIngredients)

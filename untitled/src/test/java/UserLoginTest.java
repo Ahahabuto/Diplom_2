@@ -1,3 +1,4 @@
+import api.DataGenerator;
 import api.Specifications;
 import api.UserApi;
 import api.UserData;
@@ -11,7 +12,7 @@ public class UserLoginTest extends BaseForTests {
     @Before
     public void setUp() {
         super.setUp();
-        user = new UserData("luffy@gear5.com", "GomuGomuNo", "Luffy");
+        user = DataGenerator.generateUser();
         registerUser(user);
     }
 
@@ -28,9 +29,20 @@ public class UserLoginTest extends BaseForTests {
     }
 
     @Test
-    public void loginWithInvalidCredentialsTest() {
-        UserData invalidUser = new UserData("wrongemail@.com", "password", "Luffy");
+    public void loginWithInvalidEmailTest() {
+        UserData invalidUser = new UserData(DataGenerator.generateEmail(), user.getPassword(), user.getName());
 
+        Specifications.installSpecification(Specifications.requestSpec(), Specifications.responseSpec401Unauthorized());
+        UserApi.login(invalidUser)
+                .then()
+                .log().all()
+                .body("success", equalTo(false))
+                .body("message", equalTo("email or password are incorrect"));
+    }
+
+    @Test
+    public void loginWithInvalidPasswordTest() {
+        UserData invalidUser = new UserData(user.getEmail(), DataGenerator.generatePassword(), user.getName());
         Specifications.installSpecification(Specifications.requestSpec(), Specifications.responseSpec401Unauthorized());
         UserApi.login(invalidUser)
                 .then()

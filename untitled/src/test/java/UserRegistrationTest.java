@@ -1,3 +1,4 @@
+import api.DataGenerator;
 import api.Specifications;
 import api.UserApi;
 import api.UserData;
@@ -11,7 +12,7 @@ public class UserRegistrationTest extends BaseForTests {
     @Before
     public void setUp() {
         super.setUp();
-        user = new UserData("monkeyd@grandline.com", "password", "Zoro");
+        user = DataGenerator.generateUser();
     }
 
     @Test
@@ -44,7 +45,31 @@ public class UserRegistrationTest extends BaseForTests {
 
     @Test
     public void registrationWithoutEmailTest() {
-        UserData invalid = new UserData("", "password", "Luffy");
+        UserData invalid = new UserData("", DataGenerator.generatePassword(), DataGenerator.generateName());
+
+        Specifications.installSpecification(Specifications.requestSpec(), Specifications.responseSpec403Forbidden());
+        UserApi.register(invalid)
+                .then()
+                .log().all()
+                .body("success", equalTo(false))
+                .body("message", equalTo("Email, password and name are required fields"));
+    }
+
+    @Test
+    public void registrationWithoutPasswordTest() {
+        UserData invalid = new UserData(DataGenerator.generateEmail(), "", DataGenerator.generateName());
+
+        Specifications.installSpecification(Specifications.requestSpec(), Specifications.responseSpec403Forbidden());
+        UserApi.register(invalid)
+                .then()
+                .log().all()
+                .body("success", equalTo(false))
+                .body("message", equalTo("Email, password and name are required fields"));
+    }
+
+    @Test
+    public void registrationWithoutNameTest() {
+        UserData invalid = new UserData(DataGenerator.generateEmail(), DataGenerator.generatePassword(), "");
 
         Specifications.installSpecification(Specifications.requestSpec(), Specifications.responseSpec403Forbidden());
         UserApi.register(invalid)
